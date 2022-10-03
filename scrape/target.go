@@ -45,6 +45,7 @@ const (
 )
 
 // Target refers to a singular HTTP or HTTPS endpoint.
+// Target是指一个HTTP或HTTPS端点
 type Target struct {
 	// Labels before any processing.
 	discoveredLabels labels.Labels
@@ -84,6 +85,7 @@ type MetricMetadataStore interface {
 }
 
 // MetricMetadata is a piece of metadata for a metric.
+// metric的元数据
 type MetricMetadata struct {
 	Metric string
 	Type   textparse.MetricType
@@ -227,10 +229,12 @@ func (t *Target) URL() *url.URL {
 }
 
 // Report sets target data about the last scrape.
+// 设置target最后一次的scrape状态
 func (t *Target) Report(start time.Time, dur time.Duration, err error) {
 	t.mtx.Lock()
 	defer t.mtx.Unlock()
 
+	// 只要有scrape error,将target标记为down
 	if err == nil {
 		t.health = HealthGood
 	} else {
@@ -267,6 +271,7 @@ func (t *Target) LastScrapeDuration() time.Duration {
 }
 
 // Health returns the last known health state of the target.
+// 返回target endpoint的状态
 func (t *Target) Health() TargetHealth {
 	t.mtx.RLock()
 	defer t.mtx.RUnlock()
@@ -483,6 +488,7 @@ func PopulateLabels(lset labels.Labels, cfg *config.ScrapeConfig, noDefaultPort 
 }
 
 // TargetsFromGroup builds targets based on the given TargetGroup and config.
+// 从配置和targetGroup中构建target(添加label)
 func TargetsFromGroup(tg *targetgroup.Group, cfg *config.ScrapeConfig, noDefaultPort bool) ([]*Target, []error) {
 	targets := make([]*Target, 0, len(tg.Targets))
 	failures := []error{}

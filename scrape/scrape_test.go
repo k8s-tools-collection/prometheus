@@ -2349,6 +2349,7 @@ func (ts *testScraper) offset(interval time.Duration, jitterSeed uint64) time.Du
 	return ts.offsetDur
 }
 
+// 设置时间
 func (ts *testScraper) Report(start time.Time, duration time.Duration, err error) {
 	ts.lastStart = start
 	ts.lastDuration = duration
